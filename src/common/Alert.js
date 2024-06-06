@@ -1,4 +1,4 @@
-import { XCircleIcon } from '@heroicons/react/solid';
+import { XCircleIcon } from '@heroicons/react/24/solid';
 
 const Alert = ({ alert, handleClose }) => {
   if (alert && alert?.autoClose) {

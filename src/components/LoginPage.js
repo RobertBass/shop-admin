@@ -1,6 +1,6 @@
 import { useRef } from 'react';
 import { useRouter } from 'next/router';
-import { LockClosedIcon } from '@heroicons/react/solid';
+import { LockClosedIcon } from '@heroicons/react/24/solid';
 import { useAuth } from '@hooks/useAuth';
 
 export default function LoginPage() {

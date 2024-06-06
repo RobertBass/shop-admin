@@ -1,13 +1,18 @@
 import { useState, useEffect } from 'react';
-import { CheckIcon, XCircleIcon } from '@heroicons/react/solid';
+import { PlusIcon, XCircleIcon } from '@heroicons/react/24/solid';
 import Link from 'next/link';
 import Modal from '@common/Modal';
 import FormProduct from '@components/FormProduct';
 import axios from 'axios';
 import endPoints from '@services/api';
 import useAlert from '@hooks/useAlert';
+import Paginate from '@hooks/Paginate';
+import Pagination from '@components/Pagination';
 import Alert from '@common/Alert';
 import { deleteProduct } from '@services/api/products';
+
+const PRODUCT_LIMIT = 10;
+const PRODUCT_OFFSET = 0;
 
 export default function Products() {
   const [open, setOpen] = useState(false);
@@ -37,6 +42,13 @@ export default function Products() {
     });
   };
 
+  const totalProducts = products.length;
+  const paginate = Paginate(PRODUCT_LIMIT, PRODUCT_OFFSET, totalProducts);
+  const handleNext = paginate.handleNext;
+  const handlePrev = paginate.handlePrev;
+  const offset = paginate.newOffset;
+  const pagProducts = products.slice(offset, offset + PRODUCT_LIMIT);
+
   return (
     <>
       <Alert alert={alert} handleClose={toggleAlert} />
@@ -51,7 +63,7 @@ export default function Products() {
               className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
               onClick={() => setOpen(true)}
             >
-              <CheckIcon className="-ml-1 mr-2 h-5 w-5" aria-hidden="true" />
+              <PlusIcon className="-ml-1 mr-2 h-5 w-5 font-bold text-sm" aria-hidden="true" />
               Add Product
             </button>
           </span>
@@ -62,6 +74,7 @@ export default function Products() {
         <div className="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
           <div className="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
             <div className="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
+              <Pagination limit={PRODUCT_LIMIT} offset={offset} total={totalProducts} handlePrev={handlePrev} handleNext={handleNext}></Pagination>
               <table className="min-w-full divide-y divide-gray-200">
                 <thead className="bg-gray-50">
                   <tr>
@@ -86,7 +99,7 @@ export default function Products() {
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
-                  {products?.map((product) => (
+                  {pagProducts?.map((product) => (
                     <tr key={`Product-item-${product.id}`}>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="flex items-center">
